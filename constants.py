@@ -14,6 +14,12 @@ HEIGHT = 700
 PLAYER_LEFT = "L"
 PLAYER_RIGHT = "R"
 
+#Define sprite file names
+P1_LSPRITE = "assets/p1_L.png"
+P1_RSPRITE = "assets/p1_R.png"
+P2_LSPRITE = "assets/p2_L.png"
+P2_RSPRITE = "assets/p2_R.png"
+
 #Define status bar size
 STATUS_HEIGHT = 200
 
@@ -23,3 +29,9 @@ LEVEL_HEIGHT = HEIGHT - STATUS_HEIGHT + 75
 #Define player spawns
 P1_SPAWN = 100
 P2_SPAWN = WIDTH - 100
+
+#Define bullet speed
+BULLET_SPEED = 50
+
+#Define sound effects
+SFX_BULLET = "assets/sfx_shoot.mp3"

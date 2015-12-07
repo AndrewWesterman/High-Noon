@@ -5,11 +5,9 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, screen, name, num):
         super().__init__()
-        height = 60
-        width = 40
-        self.image = pygame.Surface([width, height])
-        self.image.fill(WHITE)
 
+        self.image = pygame.image.load(P1_LSPRITE).convert()
+        self.image.set_colorkey(WHITE)
         self.rect = self.image.get_rect()
 
         self.change_x = 0
@@ -18,14 +16,22 @@ class Player(pygame.sprite.Sprite):
         self.num = num
         if num == 1:
             self.direction = PLAYER_LEFT
+            self.image = pygame.image.load(P1_LSPRITE).convert()
+            self.image.set_colorkey(WHITE)
+            self.rect = self.image.get_rect()
         else:
             self.direction = PLAYER_RIGHT
+            self.image = pygame.image.load(P2_RSPRITE).convert()
+            self.image.set_colorkey(WHITE)
+            self.rect = self.image.get_rect()
         self.x = None
         self.y = None
         self.level = None
         
     def update(self):
         self.grav()
+
+        self.updateImage()
 
         self.rect.x += self.change_x
         self.rect.y += self.change_y
@@ -49,15 +55,11 @@ class Player(pygame.sprite.Sprite):
 
     def spawn(self):
         if self.num == 1:
-            self.x = P1_SPAWN
+            self.rect.x = P1_SPAWN
         else:
-            self.x = P2_SPAWN
+            self.rect.x = P2_SPAWN
 
-        self.y = LEVEL_HEIGHT - self.rect.height        
-        print("{} has spawned".format(self.name))
-
-    def draw(self, screen):
-        print("{} is being drawn".format(self.name))
+        self.rect.y = LEVEL_HEIGHT - self.rect.height
 
     def jump(self):
         self.rect.y += 2
@@ -69,11 +71,26 @@ class Player(pygame.sprite.Sprite):
 
     def moveLeft(self):
         self.change_x = -6
-        print("{} moved left".format(self.name))
+        self.direction = PLAYER_LEFT
 
     def moveRight(self):
         self.change_x = 6
-        print("{} moved right".format(self.name))
-
+        self.direction = PLAYER_RIGHT
     def stop(self):
         self.change_x = 0
+
+    def updateImage(self):
+        if self.direction == PLAYER_RIGHT:
+            if self.num == 1:
+                self.image = pygame.image.load(P1_RSPRITE).convert()
+                self.image.set_colorkey(WHITE)
+            else:
+                self.image = pygame.image.load(P2_RSPRITE).convert()
+                self.image.set_colorkey(WHITE)
+        else:
+            if self.num == 1:
+                self.image = pygame.image.load(P1_LSPRITE).convert()
+                self.image.set_colorkey(WHITE)
+            else:
+                self.image = pygame.image.load(P2_LSPRITE).convert()
+                self.image.set_colorkey(WHITE)

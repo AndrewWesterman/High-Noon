@@ -27,8 +27,6 @@ class Level():
         self.platform_list.update()
 
     def draw(self, screen):
-        # This will draw the initial game space.
-        # print("Level being drawn")
         screen.fill(BLACK)
         pygame.draw.rect(screen, BLUE, [0, 75, WIDTH, LEVEL_HEIGHT - 75])
         self.platform_list.draw(screen)
