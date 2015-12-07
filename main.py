@@ -1,117 +1,97 @@
 import pygame
-
-# Define some colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-YELLOW = (255, 255, 0)
-BLUE  = (0, 10, 255)
-
-#Define screen size
-WIDTH = 1000
-HEIGHT = 700
-
-class Level():
-
-    def __init__(self, screen, width, height):
-        self.screen = screen
-        self.width = width
-        self.height = height
-        self.p1spawn = 100
-        self.p2spawn = width - 100
-        self.screen.fill(BLACK)
-
-    def draw(self):
-        # This will draw the initial game space.
-        print("Level being drawn")
-        pygame.draw.rect(screen, BLUE, [0, 75, self.width, self.height])
-
-    def getSpawn1(self):
-        return self.p1spawn
-
-    def getSpawn2(self):
-        return self.p2spawn
+from constants import *
+from level import *
+from player import *
+from powerup import *
 
 
-class Building():
+def main():
 
-    def __init__(self, screen):
-        self.screen = screen
+    pygame.init()
+    size = (WIDTH, HEIGHT)
+    screen = pygame.display.set_mode(size)
+    pygame.display.set_caption("HiGH N00N")
+     
+    # Used to manage how fast the screen updates
+    clock = pygame.time.Clock()
 
-    def draw(self):
-        print("Building being drawn")
+    player1 = Player(screen, "Player 1", 1)
+    player2 = Player(screen, "Player 2", 2)
 
-class Powerup():
 
-    def __init__(self, screen):
-        self.screen = screen
+    level = Level([player1, player2]);
+    player1.level = level
+    player2.level = level
 
-    def draw(self):
-        print("Powerup being drawn")
-
-class Player():
-    PLAYER_LEFT = "L"
-    PLAYER_RIGHT = "R"
-
-    def __init__(self, screen, name, num):
-        self.screen = screen
-        self.name = name
-        if num == 1:
-            self.direction = PLAYER_LEFT
-        else:
-            self.direction = PLAYER_RIGHT
-
-    def spwan(self):
-        print("{} has spawned")
-
-    def draw(self):
-        print("{} is being drawn".format(self.name))
-
-    def jump(self):
-        print("{} jumped".format(self.name))
-
-    def moveLeft(self):
-        print("{} moved left".format(self.name))
-
-    def moveRight(self):
-        print("{} moved right".format(self.name))
-
-pygame.init()
-size = (WIDTH, HEIGHT)
-screen = pygame.display.set_mode(size)
-pygame.display.set_caption("HiGH N00N")
-
-# Loop until the user clicks the close button.
-done = False
+    player1.spawn()
+    player2.spawn()
  
-# Used to manage how fast the screen updates
-clock = pygame.time.Clock()
+    active_sprite_list = pygame.sprite.Group()
+    active_sprite_list.add(player1)
+    active_sprite_list.add(player2)
 
-level = Level(screen, WIDTH, HEIGHT - 200);
-level.draw()
-pygame.display.flip()
- 
+     # Loop until the user clicks the close button.
+    done = False     
 
-# -------- Main Program Loop -----------
-while not done:
-    # --- Main event loop
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
- 
-    # --- Game logic should go here
- 
-    # --- Drawing code should go here
- 
-    # First, clear the screen to white. Don't put other drawing commands
-    # above this, or they will be erased with this command.
-    # screen.fill(WHITE)
- 
-    # --- Go ahead and update the screen with what we've drawn.
-    pygame.display.flip()
- 
-    # --- Limit to 60 frames per second
-    clock.tick(60)
+    # -------- Main Program Loop -----------
+    while not done:
+        # --- Main event loop
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    player1.moveLeft()
+                if event.key == pygame.K_d:
+                    player1.moveRight()
+                if event.key == pygame.K_w:
+                    player1.jump()
+                if event.key == pygame.K_LEFT:
+                    player2.moveLeft()
+                if event.key == pygame.K_RIGHT:
+                    player2.moveRight()
+                if event.key == pygame.K_UP:
+                    player2.jump()
 
-pygame.quit()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_a and player1.change_x < 0:
+                    player1.stop()
+                if event.key == pygame.K_d and player1.change_x > 0:
+                    player1.stop()
+                if event.key == pygame.K_LEFT and player2.change_x < 0:
+                    player2.stop()
+                if event.key == pygame.K_RIGHT and player2.change_x > 0:
+                    player2.stop()
+
+        active_sprite_list.update()
+        level.update()
+     
+        # --- Game logic should go here
+        if player1.rect.right > WIDTH:
+            player1.rect.right = WIDTH
+        if player2.rect.right > WIDTH:
+            player2.rect.right = WIDTH
+
+        if player1.rect.left < 0:
+            player1.rect.left = 0
+        if player2.rect.left < 0:
+            player2.rect.left = 0
+
+        # --- Drawing code should go here
+        level.draw(screen)
+        active_sprite_list.draw(screen)
+
+        # First, clear the screen to white. Don't put other drawing commands
+        # above this, or they will be erased with this command.
+        # screen.fill(WHITE)
+     
+        # --- Go ahead and update the screen with what we've drawn.
+        pygame.display.flip()
+     
+        # --- Limit to 60 frames per second
+        clock.tick(60)
+
+    pygame.quit()
+
+if __name__ == "__main__":
+    main()
