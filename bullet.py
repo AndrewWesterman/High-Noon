@@ -1,3 +1,11 @@
+# Author:
+# Andrew Westerman
+# awesterman@csu.fullerton.edu
+# CS 386: Final Project
+# Module info:
+# bullet.py: bullet object, handles bullet position and sound effects
+
+
 import pygame
 from constants import *
 

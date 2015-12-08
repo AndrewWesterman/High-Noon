@@ -1,3 +1,11 @@
+# Author:
+# Andrew Westerman
+# awesterman@csu.fullerton.edu
+# CS 386: Final Project
+# Module info:
+# player.py: the player object, in charge of maintatining player positions and sprite handling
+
+
 import pygame
 from constants import *
 
@@ -14,6 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.change_y = 0
         self.name = name
         self.num = num
+        self.lives = 3
         if num == 1:
             self.direction = PLAYER_LEFT
             self.image = pygame.image.load(P1_LSPRITE).convert()
